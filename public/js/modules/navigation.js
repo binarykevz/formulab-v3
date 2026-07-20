@@ -1,5 +1,8 @@
 window.AppNav = {
+    _currentTab: 'dashboard',
+
     showTab(tab, el) {
+        this._currentTab = tab;
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById('tab-' + tab).classList.add('active');
@@ -7,7 +10,16 @@ window.AppNav = {
         const titles = { dashboard: 'Dashboard', inventory: 'Raw Materials', formulation: 'Formulation', purchaserequest: 'Purchase Requests', suppliers: 'Suppliers', reports: 'Reports', team: 'Team' };
         document.getElementById('page-title').textContent = titles[tab] || tab;
 
-        // Lazy render
+        // Render the tab content
+        this._renderTab(tab);
+
+        if (window.innerWidth <= 900) {
+            document.getElementById('sidebar').classList.remove('visible');
+            document.getElementById('main-content').classList.remove('expanded');
+        }
+    },
+
+    _renderTab(tab) {
         switch (tab) {
             case 'dashboard': window.dashboardModule.render(); break;
             case 'inventory': window.materialModule.renderInventoryTab(); break;
@@ -17,10 +29,10 @@ window.AppNav = {
             case 'reports': window.reportsModule.render(); break;
             case 'team': window.teamModule.render(); break;
         }
-        if (window.innerWidth <= 900) {
-            document.getElementById('sidebar').classList.remove('visible');
-            document.getElementById('main-content').classList.remove('expanded');
-        }
+    },
+
+    refreshCurrent() {
+        this._renderTab(this._currentTab);
     },
 
     toggleSidebar() {
@@ -55,11 +67,7 @@ window.AppNav = {
             window.supplierModule.load(),
             window.prModule.load(),
         ]);
-        this.renderAll();
-    },
-
-    renderAll() {
-        const active = document.querySelector('.tab-content.active')?.id?.replace('tab-', '');
-        if (active) this.showTab(active, document.querySelector('.nav-item.active'));
+        // Render the default tab (dashboard)
+        this.showTab('dashboard', document.querySelector('.nav-item[data-tab="dashboard"]'));
     }
 };
