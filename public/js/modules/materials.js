@@ -69,14 +69,15 @@ window.materialModule = {
             } else {
                 await API.createMaterial(data);
             }
-            modal.close('material-modal');
-            await this.load();
-            window.formulationModule._formulations = await API.getFormulations();
-            window.AppNav.renderAll();
-        } catch (e) { alert(e.message); }
-    },
+             modal.close('material-modal');
+        await this.load();
+        window.formulationModule._formulations = await API.getFormulations();
+        window.AppNav.renderAll();
+        window.AppNav.refreshCurrent();
+    } catch (e) { alert(e.message); }
+},
 
-    edit(id) {
+edit(id) {
         const m = this._materials.find(x => x.id === id);
         if (!m) return;
         document.getElementById('mat-edit-id').value = m.id;
