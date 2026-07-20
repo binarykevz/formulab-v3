@@ -5,6 +5,7 @@ window.GridCanvas = {
         const ctx = c.getContext('2d');
         c.width = window.innerWidth;
         c.height = window.innerHeight;
+
         const prefix = color === 'red' ? 'rgba(255,61,90,' : color === 'green' ? 'rgba(0,230,118,' : 'rgba(0,212,255,';
 
         ctx.clearRect(0, 0, c.width, c.height);
@@ -25,6 +26,18 @@ window.GridCanvas = {
             ctx.arc(Math.random() * c.width, Math.random() * c.height, Math.random() * 2 + 1, 0, Math.PI * 2);
             ctx.fill();
         }
+
+        this._currentColor = color;
     },
-    init() { this.draw('cyan'); window.addEventListener('resize', () => { if (!window.AppState?.user) this.draw('cyan'); }); }
+
+    // After a feedback color flash, revert to cyan
+    flash(color, duration = 2000) {
+        this.draw(color);
+        setTimeout(() => this.draw('cyan'), duration);
+    },
+
+    init() {
+        this.draw('cyan');
+        window.addEventListener('resize', () => this.draw(this._currentColor || 'cyan'));
+    }
 };
