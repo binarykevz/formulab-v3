@@ -26,16 +26,18 @@ window.supplierModule = {
     openModal() { ['sup-name', 'sup-contact', 'sup-email', 'sup-phone'].forEach(id => document.getElementById(id).value = ''); modal.open('supplier-modal'); },
 
     async save() {
-        const name = document.getElementById('sup-name').value.trim();
+         const name = document.getElementById('sup-name').value.trim();
         if (!name) { alert('Name required.'); return; }
         await API.createSupplier({ name, contact: document.getElementById('sup-contact').value, email: document.getElementById('sup-email').value, phone: document.getElementById('sup-phone').value });
         modal.close('supplier-modal');
         await this.load(); window.AppNav.renderAll();
+        await this.load(); window.AppNav.refreshCurrent();
     },
 
     async remove(id) {
         if (!confirm('Delete supplier?')) return;
         await API.deleteSupplier(id);
         await this.load(); window.AppNav.renderAll();
+        await this.load(); window.AppNav.refreshCurrent();
     }
 };
