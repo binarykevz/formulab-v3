@@ -5,6 +5,7 @@ import { dirname, join } from 'path';
 import dotenv from 'dotenv';
 
 import { initDB } from './db.js';
+import { tgStatus } from './telegram.js';
 import authRoutes from './routes/auth.js';
 import materialRoutes from './routes/materials.js';
 import formulationRoutes from './routes/formulations.js';
