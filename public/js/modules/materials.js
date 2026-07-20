@@ -95,11 +95,14 @@ edit(id) {
     },
 
     async remove(id) {
-        if (!confirm('Delete this material?')) return;
-        await API.deleteMaterial(id);
-        await this.load();
-        window.AppNav.renderAll();
-    },
+    if (!confirm('Remove from formulation?')) return;
+    await API.deleteFormulation(id);
+    await this.load(); window.AppNav.renderAll();
+    await this.load(); window.AppNav.refreshCurrent();
+},
+
+exportPDF() {
+    const { fmt, calcUnitCost, calcSachetCost, esc } = Utils;
 
     renderInventoryTab() {
         const { esc, fmt, calcUnitCost } = Utils;
