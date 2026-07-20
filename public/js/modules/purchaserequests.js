@@ -7,19 +7,24 @@ window.prModule = {
     render() {
         const { esc } = Utils;
         const user = window.AppState.user;
+        if (!user) return;
         const canApprove = Utils.hasPermission(user.department, 'purchaseApprove');
 
         // Filter bar
-        const statuses = ['all', 'pending', 'approved', 'rejected', 'arrival', 'received'];
-        document.getElementById('pr-filter-bar').innerHTML = statuses.map(s => {
-            const label = s === 'all' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1);
-            const cnt = s === 'all' ? this._prs.length : this._prs.filter(p => p.status === s).length;
-            return `<button class="${s === this._filter ? 'active' : ''}" onclick="window.prModule.setFilter('${s}')">${label} (${cnt})</button>`;
-        }).join('');
+        const filterBar = document.getElementById('pr-filter-bar');
+        if (filterBar) {
+            const statuses = ['all', 'pending', 'approved', 'rejected', 'arrival', 'received'];
+            filterBar.innerHTML = statuses.map(s => {
+                const label = s === 'all' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1);
+                const cnt = s === 'all' ? this._prs.length : this._prs.filter(p => p.status === s).length;
+                return `<button class="${s === this._filter ? 'active' : ''}" onclick="window.prModule.setFilter('${s}')">${label} (${cnt})</button>`;
+            }).join('');
+        }
 
         let prs = this._filter === 'all' ? this._prs : this._prs.filter(p => p.status === this._filter);
 
         const tb = document.getElementById('pr-table');
+        if (!tb) return;
         if (!prs.length) { tb.innerHTML = '<tr><td colspan="10"><div class="empty-state"><i class="fas fa-cart-shopping"></i><h4>No requests</h4></div></td></tr>'; return; }
 
         tb.innerHTML = prs.map(p => {
@@ -69,12 +74,14 @@ window.prModule = {
             quantity: qty, unit: document.getElementById('pr-unit').value, reason: document.getElementById('pr-reason').value.trim(),
         });
         modal.close('pr-modal');
-        await this.load(); window.AppNav.renderAll();
+        await this.load();
+        this.renderTab();
     },
 
     async quickStatus(id, status) {
         await API.updatePRStatus(id, status);
-        await this.load(); window.AppNav.renderAll();
+        await this.load();
+        this.renderTab();
     },
 
     async view(id) {
