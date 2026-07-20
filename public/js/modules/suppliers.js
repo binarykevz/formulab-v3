@@ -6,6 +6,7 @@ window.supplierModule = {
     render() {
         const { esc } = Utils;
         const tb = document.getElementById('supplier-table');
+        if (!tb) return;
         if (!this._suppliers.length) { tb.innerHTML = '<tr><td colspan="6"><div class="empty-state"><i class="fas fa-truck"></i><h4>No suppliers</h4></div></td></tr>'; return; }
         tb.innerHTML = this._suppliers.map(s => `<tr>
             <td><strong>${esc(s.name)}</strong></td><td>${esc(s.contact) || '-'}</td>
