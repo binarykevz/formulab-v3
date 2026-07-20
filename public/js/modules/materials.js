@@ -3,14 +3,15 @@ window.materialModule = {
 
     async load() { try { this._materials = await API.getMaterials(); } catch { this._materials = []; } },
 
-    render() {
-        const q = (document.getElementById('search-inv')?.value || '').toLowerCase();
-        const list = this._materials.filter(m => m.name?.toLowerCase().includes(q) || m.code?.toLowerCase().includes(q));
-        const tb = document.getElementById('inventory-table');
-        if (!list.length) { tb.innerHTML = '<tr><td colspan="8"><div class="empty-state"><i class="fas fa-boxes-stacked"></i><h4>No materials found</h4></div></td></tr>'; return; }
-        const { esc, fmt, calcUnitCost } = Utils;
-        tb.innerHTML = list.map(m => {
-            const uc = calcUnitCost(m.price, m.qty_bulk);
+   render() {
+    const q = (document.getElementById('search-inv')?.value || '').toLowerCase();
+    const list = this._materials.filter(m => m.name?.toLowerCase().includes(q) || m.code?.toLowerCase().includes(q));
+    const tb = document.getElementById('inventory-table');
+    if (!tb) return;
+    if (!list.length) { tb.innerHTML = '<tr><td colspan="8"><div class="empty-state"><i class="fas fa-boxes-stacked"></i><h4>No materials found</h4></div></td></tr>'; return; }
+    const { esc, fmt, calcUnitCost } = Utils;
+    tb.innerHTML = list.map(m => {
+        const uc = calcUnitCost(m.price, m.qty_bulk);
             return `<tr>
                 <td><strong>${esc(m.name)}</strong></td>
                 <td><span class="badge badge-info">${esc(m.code)}</span></td>
