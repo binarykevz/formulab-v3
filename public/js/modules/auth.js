@@ -22,16 +22,15 @@ window.authModule = {
         const pw = document.getElementById('login-pw').value;
         try {
             const res = await API.login(id, pw);
-            GridCanvas.draw('green');
+            GridCanvas.flash('green');
             this._showStatus('Login successful!', 'success');
             SessionCache.set(res.token, res.user);
             window.AppState.user = res.user;
             window.AppState.token = res.token;
             setTimeout(() => window.AppNav.enterApp(), 600);
         } catch (e) {
-            GridCanvas.draw('red');
+            GridCanvas.flash('red');
             this._showStatus(e.message, 'error');
-            setTimeout(() => GridCanvas.draw('cyan'), 2000);
         }
     },
 
@@ -47,13 +46,12 @@ window.authModule = {
                 organization: document.getElementById('reg-org').value,
                 department: document.getElementById('reg-dept').value,
             });
-            GridCanvas.draw('green');
+            GridCanvas.flash('green');
             this._showStatus('Account created! You can now login.', 'success');
-            setTimeout(() => { this.showForm('login'); GridCanvas.draw('cyan'); }, 2000);
+            setTimeout(() => this.showForm('login'), 2000);
         } catch (e) {
-            GridCanvas.draw('red');
+            GridCanvas.flash('red');
             this._showStatus(e.message, 'error');
-            setTimeout(() => GridCanvas.draw('cyan'), 2000);
         }
     },
 
