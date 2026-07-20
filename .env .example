@@ -1,0 +1,6 @@
+PORT=3000
+JWT_SECRET=erp_secret_change_me_in_production_2026
+TURSO_DB_URL=libsql://your-database-name-your-org.turso.io
+TURSO_AUTH_TOKEN=your-turso-auth-token
+TELEGRAM_BOT_TOKEN=YOUR_BOT_TOKEN_HERE
+TELEGRAM_CHAT_ID=YOUR_CHAT_ID_HERE
