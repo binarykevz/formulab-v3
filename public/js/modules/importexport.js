@@ -61,11 +61,13 @@ window.importExport = {
         for (const m of this._pending) {
             try { await API.createMaterial(m); } catch {}
         }
-        this._pending = [];
-        modal.close('import-modal');
-        await window.materialModule.load();
-        window.AppNav.renderAll();
-    },
+    this._pending = [];
+    modal.close('import-modal');
+    await window.materialModule.load();
+    window.AppNav.renderAll();
+    window.AppNav.refreshCurrent();
+},
+
 
     exportExcel() {
         const mats = window.materialModule._materials;
