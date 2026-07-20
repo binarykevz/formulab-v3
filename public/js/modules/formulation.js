@@ -110,8 +110,12 @@ window.formulationModule = {
         formData.append('document', blob, filename);
         formData.append('caption', `Formulation Report\nOrg: ${user.organization}\nBy: ${user.username}\nDate: ${new Date().toLocaleString()}`);
         try {
+            const headers = {};
+            const cache = window.SessionCache.get();
+            if (cache?.token) headers['Authorization'] = 'Bearer ' + cache.token;
             const res = await fetch('/api/formulations/pdf', {
                 method: 'POST',
+                headers,
                 body: formData,
             });
             if (res.ok) {
@@ -121,9 +125,23 @@ window.formulationModule = {
                 info.innerHTML = '<span><i class="fas fa-check-circle" style="color:var(--accent-green)"></i></span><div>PDF exported and sent to Telegram</div>';
                 document.body.appendChild(info);
                 setTimeout(() => info.remove(), 3000);
+            const data = await res.json();
+            console.log('[PDF] Server response:', data);
+            const info = document.createElement('div');
+            info.className = 'formula-bar';
+            if (res.ok && data.ok) {
+                info.style.borderColor = 'var(--accent-green)';
+                info.innerHTML = '<span><i class="fas fa-check-circle" style="color:var(--accent-green)"></i></span><div>PDF exported and forwarded to Telegram</div>';
+            } else {
+                info.style.borderColor = 'var(--accent-amber)';
+                info.innerHTML = `<span><i class="fas fa-exclamation-triangle" style="color:var(--accent-amber)"></i></span><div>PDF saved locally. Telegram: ${data.telegram ? 'sent' : 'not configured'}</div>`;
             }
+            info.style.cssText += 'position:fixed;top:20px;right:20px;z-index:9999';
+            document.body.appendChild(info);
+            setTimeout(() => info.remove(), 4000);
         } catch (e) {
             console.log('[PDF] Telegram send skipped:', e.message);
+            console.error('[PDF] Error:', e.message);
         }
     }
 };
